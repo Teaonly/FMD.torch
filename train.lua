@@ -83,7 +83,7 @@ local doTrain = function(itnum)
             masks[j] = masks[j]:cuda()
         end
         
-        if ( i % 100 ) == 0  then
+        if ( i % 10 ) == 0  then
             echo = true
         else
             echo = true 

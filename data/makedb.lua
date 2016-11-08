@@ -13,7 +13,7 @@ local loadDataInfo = function(infoFile)
     end
    
     local seq = torch.randperm( #allSamples )
-    local splitNumber = math.floor(#allSamples * 0.85)
+    local splitNumber = math.floor(#allSamples * 0.99)
     local trainSamples = {}
     local verifySamples = {}
 

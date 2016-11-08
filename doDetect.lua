@@ -2,7 +2,7 @@ require('torch')
 require('cunn')
 require('image')
 
-local minSize = 256 
+local minSize = 288 
 local threshold = 0.75
 
 local className = {
@@ -145,20 +145,31 @@ for i = 1, #modelInfo.boxes do
                 box.ymax = loc[4][h][w]*16 + pbox.ymax
                 
                 local isNew = true
+                local removed = {}
                 for j = 1, #maxBoxes do
                     if ( maxBoxes[j].c == box.c ) then
                         overlap = jaccardOverlap(box, maxBoxes[j])
-                        if ( overlap > 0.4) then
+                        if ( overlap > 0.5) then
                             if ( box.v > maxBoxes[j].v ) then
-                                maxBoxes[j] = box
+                                table.insert(removed, j)
+                            else
+                                isNew = false
+                                break
                             end
-                            isNew = false 
-                            break
                         end
                     end
                 end
+                
                 if isNew then
+                    box.xmin = math.max(box.xmin, 0)
+                    box.xmax = math.min(box.xmax, targetWidth)
+                    box.ymin = math.max(box.ymin, 0)
+                    box.ymax = math.min(box.ymax, targetHeight)
                     table.insert(maxBoxes, box)    
+                    
+                    for j = 1,#removed do
+                        table.remove(maxBoxes, removed[j] - j + 1)    
+                    end
                 end
             end
         end
@@ -170,6 +181,6 @@ print(maxBoxes)
 local img = origin
 for i = 1, #maxBoxes do
     img = image.drawRect(img, maxBoxes[i].xmin, maxBoxes[i].ymin, maxBoxes[i].xmax, maxBoxes[i].ymax)
-    img = image.drawText(img, className[maxBoxes[i].c],  maxBoxes[i].xmin, maxBoxes[i].ymin)
+    img = image.drawText(img, className[maxBoxes[i].c],  maxBoxes[i].xmin+10, (maxBoxes[i].ymin + maxBoxes[i].ymax) / 2)
 end
-image.save('/tmp/1.jpg', img);
+image.save('result.jpg', img);

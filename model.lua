@@ -46,20 +46,20 @@ featureCNN:add( nn.ReLU(true) )
 featureCNN:add( nn.SpatialMaxPooling(2, 2, 2, 2, 0, 0):ceil() )
 
 -- output is 7x7
-featureCNN:add(nn.SpatialConvolution(512, 512, 1, 1, 1, 1, 0, 0))
+featureCNN:add(nn.SpatialConvolution(512, 1024, 1, 1, 1, 1, 0, 0))
 featureCNN:add(nn.LeakyReLU(0.1))
 
 local lossLayers = {}
 local mbox = nn.ConcatTable()
 for i = 1, #allBoxes do
     local boxConf = nn.Sequential()
-    boxConf:add(nn.SpatialConvolution(512, classNumber, allBoxes[i][1], allBoxes[i][2], 1, 1, 0, 0))
+    boxConf:add(nn.SpatialConvolution(1024, classNumber, allBoxes[i][1], allBoxes[i][2], 1, 1, 0, 0))
     boxConf:add(nn.SpatialLogSoftMax())
     mbox:add(boxConf)
     table.insert(lossLayers, nn.SpatialClassNLLCriterion())
  
     local boxLoc = nn.Sequential()
-    boxLoc:add(nn.SpatialConvolution(512,  4, allBoxes[i][1], allBoxes[i][2], 1, 1, 0, 0))
+    boxLoc:add(nn.SpatialConvolution(1024,  4, allBoxes[i][1], allBoxes[i][2], 1, 1, 0, 0))
     mbox:add(boxLoc)
     table.insert(lossLayers, nn.MSECriterion())  
 end
