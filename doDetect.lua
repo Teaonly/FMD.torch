@@ -2,8 +2,8 @@ require('torch')
 require('cunn')
 require('image')
 
-local minSize = 288 
-local threshold = 0.75
+local minSize = 224 
+local threshold = 0.85
 
 local className = {
     'aeroplane',
@@ -28,7 +28,7 @@ local className = {
     'tvmonitor'
 }
 
-local processImage = function(fileName, targetWidth, targetHeight)
+local processImage = function(fileName)
     local img2caffe = function(img)
         local mean_pixel = torch.Tensor({103.939, 116.779, 123.68})
         local perm = torch.LongTensor{3, 2, 1}
@@ -96,7 +96,7 @@ end
 
 -- init
 torch.setdefaulttensortype('torch.FloatTensor')
-cutorch.setDevice(1)
+cutorch.setDevice(2)
 
 local _ = require('./model.lua')
 local modelInfo = _.info
@@ -149,7 +149,7 @@ for i = 1, #modelInfo.boxes do
                 for j = 1, #maxBoxes do
                     if ( maxBoxes[j].c == box.c ) then
                         overlap = jaccardOverlap(box, maxBoxes[j])
-                        if ( overlap > 0.5) then
+                        if ( overlap > 0.4) then
                             if ( box.v > maxBoxes[j].v ) then
                                 table.insert(removed, j)
                             else

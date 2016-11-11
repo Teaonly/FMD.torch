@@ -5,7 +5,8 @@ local boxSampling = require('boxsampling')
 local classToNumber = require('data/classnumber')
 
 local batchSize = 32 
-local allShapes = { {256, 256} ,
+local allShapes = { {224, 224} ,
+                    {224, 256}, {256, 224},
                     {224, 288} ,
                     {288, 224} }
 

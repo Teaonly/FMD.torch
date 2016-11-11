@@ -110,7 +110,7 @@ local main = function()
     
     for e = 1, 50 do
         doTrain(1000)
-        if ( e > 20) then
+        if ( e > 30) then
             torch.save('models/model_' .. e .. '.t7', g.featureCNN)
         end
     end

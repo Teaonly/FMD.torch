@@ -8,7 +8,7 @@ local cnn = loadcaffe.load('vgg/VGG_ILSVRC_16_layers_deploy.prototxt', 'vgg/VGG_
 print(cnn)
 
 local featureCNN = nn.Sequential()
-for i = 1,17 do
+for i = 1,10 do
     featureCNN:add( cnn:get(i) )
 end
 featureCNN:evaluate()

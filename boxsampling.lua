@@ -25,8 +25,11 @@ local jaccardOverlap = function(b1, b2)
     
     return andArea / orArea
 end
-    
+   
+
 local boxSampling = function(modelInfo, imageWidth, imageHeight, labels) 
+    local scaleRatio = {-1, 0.5, 0.6, 0.75, 1.0, 1.0}
+    
     local _ = modelInfo.getSize(imageWidth, imageHeight)
     local lastWidth = _[1]
     local lastHeight = _[2]
@@ -49,10 +52,10 @@ local boxSampling = function(modelInfo, imageWidth, imageHeight, labels)
                 box.score = 0.0
                 box.label = -1
                 
-                box.xmin = cx - modelInfo.boxes[i][1] * cellWidth * 0.65 
-                box.ymin = cy - modelInfo.boxes[i][2] * cellWidth * 0.65
-                box.xmax = cx + modelInfo.boxes[i][1] * cellWidth * 0.65
-                box.ymax = cy + modelInfo.boxes[i][2] * cellWidth * 0.65
+                box.xmin = cx - modelInfo.boxes[i][1] * cellWidth * scaleRatio[modelInfo.boxes[i][1]]
+                box.ymin = cy - modelInfo.boxes[i][2] * cellWidth * scaleRatio[modelInfo.boxes[i][2]]
+                box.xmax = cx + modelInfo.boxes[i][1] * cellWidth * scaleRatio[modelInfo.boxes[i][1]]
+                box.ymax = cy + modelInfo.boxes[i][2] * cellWidth * scaleRatio[modelInfo.boxes[i][2]]
                 
                 box.xmin = math.max(box.xmin, 0)
                 box.xmax = math.min(box.xmax, imageWidth)
