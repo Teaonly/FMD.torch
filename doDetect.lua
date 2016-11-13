@@ -3,7 +3,7 @@ require('cunn')
 require('image')
 
 local minSize = 224 
-local threshold = 0.85
+local threshold = 0.75
 
 local className = {
     'aeroplane',
@@ -111,6 +111,7 @@ local targetHeight = _[2]
 local predBoxes = boxSampling( modelInfo, targetWidth, targetHeight)  
 
 local featureCNN = torch.load(arg[1])
+featureCNN:evaluate()
 fixedCNN:cuda()
 featureCNN:cuda()
 
